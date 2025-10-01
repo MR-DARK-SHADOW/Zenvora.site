@@ -1,184 +1,20 @@
-හරි 👌 දැන් අපි website එක හොඳට product detail page එකක් එක්ක කරන්නම්.
-එකේ තියෙනවා:
-
-Product Gallery (image + name + description + price)
-
-“Buy Now” button (WhatsApp open වෙනවා)
-
-Search bar
-
-Click product → detail view open වෙනවා
-
-
-මේකේ base color එක Zenvora style (soft purple/blue gradient) ගන්නම්.
-
-
----
-
-📌 Full Code (HTML, CSS, JS)
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Fliyora Store</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0; padding: 0;
-      background: #f7f9fc;
-      color: #333;
-    }
-    header {
-      background: linear-gradient(90deg, #6a11cb, #2575fc);
-      color: white; padding: 20px;
-      text-align: center;
-    }
-    header h1 { margin: 0; }
-
-    .search-box {
-      text-align: center;
-      margin: 15px;
-    }
-    .search-box input {
-      width: 80%;
-      padding: 10px;
-      border: 2px solid #6a11cb;
-      border-radius: 10px;
-    }
-
-    .products {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px; padding: 20px;
-    }
-    .product {
-      background: white; border-radius: 15px;
-      padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      cursor: pointer;
-      transition: transform .2s;
-    }
-    .product:hover { transform: scale(1.05); }
-    .product img { width: 100%; border-radius: 10px; }
-    .product h3 { margin: 10px 0 5px; }
-    .product p { margin: 5px 0; }
-    .price { color: #6a11cb; font-weight: bold; }
-
-    /* Modal (detail page popup) */
-    .modal {
-      display: none; position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      justify-content: center; align-items: center;
-    }
-    .modal-content {
-      background: white; padding: 20px;
-      border-radius: 15px; width: 90%; max-width: 400px;
-      position: relative; text-align: center;
-    }
-    .modal-content img { width: 100%; border-radius: 10px; }
-    .close {
-      position: absolute; top: 10px; right: 15px;
-      font-size: 20px; cursor: pointer; color: #333;
-    }
-    .buy-btn {
-      display: inline-block;
-      background: linear-gradient(90deg, #6a11cb, #2575fc);
-      color: white; padding: 12px 20px;
-      border: none; border-radius: 10px;
-      text-decoration: none; margin-top: 15px;
-      font-weight: bold;
-    }
-    .buy-btn:hover { opacity: 0.9; }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fliyora Beauty Store</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header>
-    <h1>Fliyora Store</h1>
-    <p>Your trusted skincare collection 💜</p>
+    <h1>🌸 Fliyora Beauty Store</h1>
+    <p>Your glow, our care ✨</p>
+    <input type="text" id="search" placeholder="Search products..." onkeyup="filterProducts()">
   </header>
 
-  <div class="search-box">
-    <input type="text" id="search" placeholder="Search products...">
-  </div>
+  <main id="product-list" class="gallery"></main>
 
-  <div class="products" id="product-list">
-    <!-- Example Product -->
-    <div class="product" data-name="Ordinary Niacinamide Serum" data-price="3500" data-desc="Helps reduce blemishes and improve skin texture.">
-      <img src="https://via.placeholder.com/200" alt="Niacinamide Serum">
-      <h3>Ordinary Niacinamide Serum</h3>
-      <p class="price">Rs. 3500</p>
-    </div>
-
-    <div class="product" data-name="CeraVe Cleanser" data-price="4200" data-desc="Gentle cleanser for normal to dry skin.">
-      <img src="https://via.placeholder.com/200" alt="CeraVe Cleanser">
-      <h3>CeraVe Cleanser</h3>
-      <p class="price">Rs. 4200</p>
-    </div>
-  </div>
-
-  <!-- Modal -->
-  <div class="modal" id="productModal">
-    <div class="modal-content">
-      <span class="close" id="closeModal">&times;</span>
-      <img id="modalImg" src="">
-      <h2 id="modalName"></h2>
-      <p id="modalDesc"></p>
-      <p class="price" id="modalPrice"></p>
-      <a id="buyNow" class="buy-btn" target="_blank">Buy Now</a>
-    </div>
-  </div>
-
-  <script>
-    const products = document.querySelectorAll(".product");
-    const modal = document.getElementById("productModal");
-    const closeModal = document.getElementById("closeModal");
-    const modalName = document.getElementById("modalName");
-    const modalDesc = document.getElementById("modalDesc");
-    const modalPrice = document.getElementById("modalPrice");
-    const modalImg = document.getElementById("modalImg");
-    const buyNow = document.getElementById("buyNow");
-
-    products.forEach(product => {
-      product.addEventListener("click", () => {
-        modal.style.display = "flex";
-        modalName.textContent = product.dataset.name;
-        modalDesc.textContent = product.dataset.desc;
-        modalPrice.textContent = "Rs. " + product.dataset.price;
-        modalImg.src = product.querySelector("img").src;
-        buyNow.href = `https://wa.me/94770000000?text=Hi! I'm interested in ${product.dataset.name} (Rs. ${product.dataset.price})`;
-      });
-    });
-
-    closeModal.onclick = () => { modal.style.display = "none"; };
-    window.onclick = e => { if(e.target == modal){ modal.style.display = "none"; } };
-
-    // Search Function
-    const search = document.getElementById("search");
-    search.addEventListener("keyup", () => {
-      const term = search.value.toLowerCase();
-      products.forEach(p => {
-        const name = p.dataset.name.toLowerCase();
-        p.style.display = name.includes(term) ? "block" : "none";
-      });
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
-
-
----
-
-👉 මේක Netlify/GitHub Pages එකේ දාගත්තම ඔයාට full site එකක් ලස්සනට ගන්න පුලුවන්.
-Product එක click කරාම detail modal එකක් එනවා (price + description + buy now → WhatsApp).
-Search box එකත් තියෙනවා 🔍.
-
-
----
-
-මම මේකේ ඔයාගේ ඔෆිෂල් WhatsApp number එක දාන්න ඕනේ buyNow.href වල තියන link එකේ.
-
-මම දැන් කියලා දමන්නම් කොහොමද GitHub / Netlify එකට upload කරන්න.
-මම ඔයාට ඒ step ගුයිඩ් දෙන්නද? 🥰
-
